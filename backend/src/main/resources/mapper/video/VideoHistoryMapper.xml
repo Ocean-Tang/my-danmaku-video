@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mydanmakuvideo.modules.video.mapper.VideoHistoryMapper">
+  <select id="histories" resultType="com.study.mydanmakuvideo.modules.video.model.dto.VideoDTO">
+    select video.id, video.user_id, video.cover, video.title, user.nick, user.avatar,
+    history.update_time as view_time, (history.time/video.duration)*100 as progress
+    from t_video_history history
+    inner join t_video video on history.video_id = video.id and video.is_delete = 0
+    inner join t_user user on video.user_id = user.id and user.is_delete = 0
+    where history.is_delete = 0
+    and history.user_id = #{userId}
+    order by history.update_time desc
+  </select>
+</mapper>

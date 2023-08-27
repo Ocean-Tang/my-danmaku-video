@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mydanmakuvideo.modules.video.mapper.VideoLikeMapper">
+  <delete id="delRecord">
+    delete from t_video_like
+    where video_id = #{videoId}
+    and user_id in
+    <foreach collection="removeUserIds" open="(" close=")" separator="," item="userId">
+      #{userId}
+    </foreach>
+  </delete>
+</mapper>

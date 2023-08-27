@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mydanmakuvideo.modules.video.mapper.VideoMapper">
+
+  <select id="getVideoDetail" resultType="com.study.mydanmakuvideo.modules.video.model.dto.VideoDTO">
+    select video.id, video.user_id, user.nick, user.avatar, video.title, video.description, video.video_id, video.cover,
+    video.count, video.status, video.duration,video.area,
+    count(distinct collection.user_id) as collect,
+    count(distinct `like`.user_id) as `like`,
+    `video`.create_time
+    from t_video video
+    inner join t_user user on video.user_id = user.id
+    left join t_video_collection collection on video.id = collection.video_id and collection.is_delete = 0
+    left join t_video_like `like` on `like`.video_id = video.id and `like`.is_delete = 0
+    where video.id = #{id}
+  </select>
+  <select id="pageVideo" resultType="com.study.mydanmakuvideo.modules.video.model.dto.VideoDTO">
+    select v.id, v.user_id, v.title, u.nick, u.avatar, v.duration, v.cover, count(distinct l.user_id) as `like`,
+    count(distinct c.user_id) as `collect`, v.count
+    from t_video v
+    left join t_user u on v.user_id = u.id and u.is_delete = 0
+    left join t_video_like l on v.id = l.video_id and l.is_delete = 0
+    left join t_video_collection c on v.id = c.video_id and c.is_delete = 0
+    left join t_video_tag vt on vt.video_id = v.id
+    left join t_tag t on vt.tag_id = t.id
+    where v.is_delete = 0 and v.status = 2
+    <if test="param.area != null">
+      and area = #{param.area.code}
+    </if>
+    <if test="@cn.hutool.core.util.StrUtil@isNotBlank(param.keyword)">
+      and (
+      title like concat('%', #{param.keyword}, '%') or
+      nick like concat('%', #{param.keyword},'%') or
+      t.name like concat('%', #{param.keyword}, '%')
+      )
+    </if>
+    group by v.id
+    order by rand(#{param.seed})
+  </select>
+
+  <select id="getPreferenceData" resultType="com.study.mydanmakuvideo.modules.video.model.dto.UserPreference">
+    select user_id, video_id, sum(value) as value
+    from (
+    select user_id, video_id, 2 value
+    from t_video_like
+    where is_delete = 0
+    group by user_id, video_id
+    union
+    select user_id, video_id, 2.5 value
+    from t_video_collection
+    where is_delete = 0
+    group by user_id, video_id
+    union
+    select user_id, video_id, sum(1.5)
+    from t_video_comment
+    where is_delete = 0
+    group by user_id, video_id
+    union
+    select user_id, video_id, sum(1)
+    from t_danmaku
+    where is_delete = 0
+    group by user_id, video_id
+    union
+    select user_id, video_id, sum(0.5)
+    from t_video_history
+    where is_delete = 0
+    group by user_id, video_id
+    ) as data
+    group by user_id, video_id
+  </select>
+
+  <select id="getPreferenceCountByUserId" resultType="java.lang.Long">
+    select sum(count)
+    from (select count(user_id) count
+    from t_video_like
+    where is_delete = 0 and user_id = #{userId}
+    union
+    select count(user_id) count
+    from t_video_collection
+    where is_delete = 0 and user_id = #{userId}
+    union
+    select count(user_id) count
+    from t_video_comment
+    where is_delete = 0 and user_id = #{userId}
+    union
+    select count(user_id) count
+    from t_danmaku
+    where is_delete = 0 and user_id = #{userId}
+    union
+    select count(user_id) count
+    from t_video_history
+    where is_delete = 0 and user_id = #{userId}
+    ) as data
+  </select>
+
+  <select id="getRandomVideo" resultType="com.study.mydanmakuvideo.modules.video.model.dto.VideoDTO">
+    select v.id, v.user_id, v.title, u.nick, u.avatar, v.duration, v.cover, count(l.video_id) as `like`,
+    count(c.video_id) as `collect`, v.count
+    from t_video v
+    left join t_user u on v.user_id = u.id and u.is_delete = 0
+    left join t_video_like l on v.id = l.video_id and l.is_delete = 0
+    left join t_video_collection c on v.id = c.video_id and c.is_delete = 0
+    <where>
+      <if test="videoIds != null and videoIds.size() != 0">
+        v.id in
+        <foreach collection="videoIds" separator="," open="(" close=")" item="id">
+          #{id}
+        </foreach>
+      </if>
+    </where>
+    group by v.id
+    order by rand()
+    limit 4
+  </select>
+
+  <select id="getPreferenceCountByVideoId" resultType="java.lang.Long">
+    select sum(count)
+    from (select count(user_id) count
+    from t_video_like
+    where is_delete = 0 and video_id = #{videoId}
+    union
+    select count(user_id) count
+    from t_video_collection
+    where is_delete = 0 and video_id = #{videoId}
+    union
+    select count(user_id) count
+    from t_video_comment
+    where is_delete = 0 and video_id = #{videoId}
+    union
+    select count(user_id) count
+    from t_danmaku
+    where is_delete = 0 and video_id = #{videoId}
+    union
+    select count(user_id) count
+    from t_video_history
+    where is_delete = 0 and video_id = #{videoId}
+    ) as data
+  </select>
+</mapper>

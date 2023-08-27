@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mydanmakuvideo.modules.user.mapper.UserSubscriptionMapper">
+  <select id="getSubscriptions" resultType="com.study.mydanmakuvideo.modules.user.model.dto.UserDTO">
+    select user.id, user.nick, user.avatar
+    from t_user_subscription subscription
+    inner join t_user user on user.id = subscription.author_id and user.is_delete = 0
+    where subscription.is_delete = 0 and subscription.user_id = #{userId}
+    order by subscription.create_time desc
+  </select>
+
+  <select id="getSubscribedList" resultType="com.study.mydanmakuvideo.modules.user.model.dto.UserDTO">
+    select user.id, user.nick, user.avatar
+    from t_user_subscription subscription
+    inner join t_user user on user.id = subscription.author_id and user.is_delete = 0
+    where subscription.is_delete = 0 and subscription.author_id = #{userId}
+    order by subscription.create_time desc
+  </select>
+</mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mydanmakuvideo.modules.video.mapper.TagMapper">
+    <select id="getTags" resultType="com.study.mydanmakuvideo.modules.video.model.dto.TagDTO">
+        select tag.id, tag.name, count(vt.id)
+        from t_tag tag
+                 left join t_video_tag vt on tag.id = vt.tag_id
+        group by tag.id
+        order by count(vt.id) desc
+    </select>
+</mapper>

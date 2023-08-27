@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mydanmakuvideo.modules.video.mapper.VideoTagMapper">
+  <select id="selectListByVideoId" resultType="com.study.mydanmakuvideo.modules.video.model.dto.TagDTO">
+    select t.id, t.name
+    from t_video_tag vt
+    inner join t_tag t on vt.tag_id = t.id
+    where vt.video_id = #{id}
+  </select>
+</mapper>

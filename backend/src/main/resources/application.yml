@@ -1,0 +1,76 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  rabbitmq:
+    addresses: localhost
+    port: 5672
+    username: admin
+    password: admin
+  servlet:
+    multipart:
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/my_danmaku_video?characterEncoding=UTF-8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 123456
+    hikari:
+      max-lifetime: 60000
+      idle-timeout: 60000
+  mail:
+    host: smtp.163.com
+    username: hcj_test@163.com
+    password: OXMLFTATBHTLOKCY
+    default-encoding: utf-8
+    # 协议
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elastic
+    password: 123456
+    connection-timeout: 30s
+    socket-timeout: 120s
+  redis:
+    host: localhost
+    password: 123456
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+rsa:
+  public-key: 自行生成
+  private-key: 自行生成
+server:
+  port: 8080
+
+aliyun:
+  vod:
+    region-id:
+    access-key-id:
+    access-key-secret:
+    ai-review-template-id: AI 审核模板ID
+  oss:
+    endpoint:
+    access-key-id:
+    access-key-secret:
+    bucket-name:
+    defaultPath:
+
+
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mydanmakuvideo.modules.video.mapper.VideoCommentMapper">
+  <select id="listByVideoId" resultType="com.study.mydanmakuvideo.modules.video.model.dto.VideoCommentDTO">
+    select comment.id, comment.user_id, user.nick, user.avatar, video.id as video_id, comment.content,
+    comment.create_time
+    from t_video video
+    inner join t_video_comment comment on video.id = comment.video_id and comment.is_delete = 0
+    inner join t_user user on user.id = comment.user_id and user.is_delete = 0
+    where video.id = #{videoId}
+    order by comment.create_time desc
+  </select>
+</mapper>
