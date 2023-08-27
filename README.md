@@ -8,6 +8,7 @@
 * 后端
   * SpringBoot
   * MySQL
+  * MyBatis-Plus
   * RabbitMQ
   * Redis
   * WebSocket
