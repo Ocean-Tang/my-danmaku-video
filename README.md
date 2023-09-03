@@ -2,7 +2,7 @@
 
 本项目是一个前后端分离的弹幕视频网站，核心功能是观看视频并发送弹幕进行交流。
 
-体验地址：[http://hcj-demo.nat300.top/](http://ocean-hcj.natapp1.cc)
+体验地址：http://ocean-hcj.natapp1.cc/
 
 使用到的技术有：
 * 后端
